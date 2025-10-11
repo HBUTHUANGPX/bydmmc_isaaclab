@@ -1,0 +1,10 @@
+LAFAN1_Retargeting_Dataset/robot_description/g1/*
+LAFAN1_Retargeting_Dataset/robot_description/h1/*
+LAFAN1_Retargeting_Dataset/g1/*
+LAFAN1_Retargeting_Dataset/h1/*
+logs/*
+outputs/*
+recordings/*
+**/__pycache__/*
+**/*.egg-info/
+wandb/*

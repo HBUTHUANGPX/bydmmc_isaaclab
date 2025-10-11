@@ -1,0 +1,1 @@
+python scripts/csv_to_npz.py --input_file LAFAN1_Retargeting_Dataset/h1_2/hpx_walk.csv --input_fps 120 --output_name hpx_walk_h1_2 --headless

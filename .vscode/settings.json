@@ -1,0 +1,14 @@
+{
+    "python.analysis.extraPaths": [
+        "/home/hpx/HPX_LOCO_2/lab_450/IsaacLab/source/isaaclab_assets",
+        "/home/hpx/HPX_LOCO_2/lab_450/IsaacLab/source/isaaclab_rl",
+        "/home/hpx/HPX_LOCO_2/lab_450/IsaacLab/source/isaaclab_tasks",
+        "/home/hpx/HPX_LOCO_2/lab_450/IsaacLab/source/isaaclab_mimic",
+        "/home/hpx/HPX_LOCO_2/lab_450/IsaacLab/source/isaaclab",
+        "/home/hpx/HPX_LOCO_2/lab_450/IsaacLab/source/isaaclab/isaaclab/envs",
+        "/home/hpx/HPX_LOCO_2/rsl_rl",
+        "/home/hpx/HPX_LOCO_2/rsl_rl/runners",
+        "/home/hpx/HPX_LOCO_2/whole_body_tracking/source",
+        "${workspaceFolder}/source/whole_body_tracking"
+    ]
+}
