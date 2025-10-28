@@ -1,0 +1,111 @@
+import numpy as np
+
+pre_set = """
+<mujoco>
+  <asset>
+    <material name="blue_" rgba="0 0 1 0.6" />
+    <material name="green" rgba="0 1 0 0.6" />
+    <material name="red__" rgba="1 0 0 0.1" />
+    <material name="white" rgba="1 1 1 0.8" />
+    <material name="black" rgba="0 0 0 0.8" />
+  </asset>
+  <compiler angle="degree" />
+"""
+a = 1
+b = 1.2
+c = 3
+d = 5
+worldbody = f"""
+    <worldbody>
+        <light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1" />
+        <body name="calf" pos="0 0 9">
+            <light name="spotlight" mode="trackcom" pos="0 -2 50" dir="0 0 -1"/>
+            <geom type="box" size="0.5 0.5 1.5" pos="0 0 0" euler="0 0 0" material="red__" />
+            <body name="Flange_A" pos="0 0 {d/2}" euler="0 0 0">
+            <!-- pos 的 2.5 是d/2 -->
+                <geom type="box" size="{a/2} .1 .2" pos="{-a/2} {b} 0" euler="0 0 0" material="blue_" />
+                <!-- size的0.5是a/2 pos的-0.5是-a/2 1.2是b -->
+                <joint name="Flange_A_joint" pos="0 0 0" axis="0 1 0" range="-80 80" actuatorfrcrange="-200 200"/>
+                <body name="Rod_A" pos="{-a} {b} 0" euler="0 0 0">
+                <!-- pos的-1是-a,1.2是b -->
+                <geom type="box" size="0.2 .2 {d/2*0.7}" pos="0. 0. {-d/2}" euler="0 0 0" material="green" />
+                <!-- size的2.5是d/2,pos的2.5是-d/2 -->
+                <joint name="Rod_A_joint" type="ball" pos="0 0 0"/>
+                </body>
+            </body>
+            <body name="Flange_B" pos="0 0 {c-d/2}" euler="0 0 0">
+            <!-- pos 的 0.5 是c-d/2 -->
+                <geom type="box" size="{a/2} .1 .2" pos="{-a/2} {-b} 0" euler="0 0 0" material="blue_" />
+                <!-- size的0.5是a/2 pos的-0.5是-a/2 -1.2是-b -->
+                <joint name="Flange_B_joint" pos="0 0 0" axis="0 1 0" range="-80 80" actuatorfrcrange="-200 200"/>
+                <body name="Rod_B" pos="{-a} {-b} 0" euler="0 0 0">
+                <!-- pos的-1是-a,-1.2是-b -->
+                <geom type="box" size="0.2 .2 {c/2*0.7}" pos="0. 0. {-c/2}" euler="0 0 0" material="green" />
+                <!-- size的1.5是c/2,pos的1.5是-c/2 -->
+                <joint name="Rod_B_joint" type="ball" pos="0 0 0"/>
+                </body>
+            </body>
+            <body name="Ankle_pitch" pos="0 0 {-d/2}" euler="0 0 0">
+            <!-- pos的-2.5是-d/2 -->
+                <geom type="box" size="{a/2} .1 .1" pos="{-a/2} 0 0" euler="0 0 0" material="white" />
+                <!-- size的0.5是a/2,pos的-0.5是-a/2 -->
+                <joint name="Ankle_pitch_joint" pos="0 0 0" axis="0 1 0" range="-80 80" actuatorfrcrange="-200 200"/>
+                <body name="Ankle_roll" pos="{-a} 0 0" euler="0 0 0">
+                <!-- pos的-1是-a -->
+                <geom type="box" size=".1 {b*0.7} .1" pos="0 0 0" euler="0 0 0" material="black" />
+                <!-- size的1.2是b -->
+                <joint name="Ankle_roll_joint" pos="0 0 0" axis="1 0 0" range="-80 80" actuatorfrcrange="-200 200"/>
+                </body>
+            </body>
+        </body>
+    </worldbody>
+    <actuator>
+        <motor joint="Flange_A_joint" name="Flange_A_joint" ctrlrange="-300 300" ctrllimited="true"/>
+        <motor joint="Flange_B_joint" name="Flange_B_joint" ctrlrange="-300 300" ctrllimited="true"/>
+    </actuator>
+    <equality>
+        <connect name="Ankle_roll_Rod_A" active="true" body1="Ankle_roll" body2="Rod_A" anchor="0 {b} 0" />
+        <connect name="Ankle_roll_Rod_B" active="true" body1="Ankle_roll" body2="Rod_B" anchor="0 {-b} 0" />
+    </equality>
+    <contact>
+        <!-- <exclude body1="link_1" body2="link_2"/>
+        <exclude body1="link_1" body2="link_3"/>
+        <exclude body1="link_1" body2="link_4"/>
+        <exclude body1="link_2" body2="link_3"/>
+        <exclude body1="link_2" body2="link_4"/>
+        <exclude body1="link_3" body2="link_4"/> -->
+    </contact>
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="1 1 1" rgb2="1 1 1" width="800" height="800"/>
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="1 1 1" rgb2="1 1 1" markrgb="0 0 0" width="300" height="300"/>
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0"/>
+        <texture type="skybox" builtin="gradient" rgb1=".4 .5 .6" rgb2="0 0 0" width="100" height="100"/>
+        <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
+        <texture name="texplane" builtin="checker" height="512" width="512" rgb1=".2 .3 .4" rgb2=".1 .15 .2" type="2d" />
+        <material name="MatPlane" reflectance="0.5" shininess="0.01" specular="0.1" texrepeat="1 1" texture="texplane" texuniform="true" />
+        <material name="geom" texture="texgeom" texuniform="true"/>
+    </asset>
+    <worldbody>
+        <geom name="floor" size="0 0 0.01" type="plane" material="groundplane" contype="1" conaffinity="0" priority="1" friction="0.6" condim="3"/>
+    </worldbody>
+</mujoco>    
+"""
+
+import mujoco
+import mujoco.viewer
+import time
+xml_content = pre_set+worldbody
+model = mujoco.MjModel.from_xml_string(xml_content)
+data = mujoco.MjData(model)
+
+with mujoco.viewer.launch_passive(
+        model,
+        data,
+        # show_left_ui=False,
+        # show_right_ui=False
+    ) as viewer:
+        while viewer.is_running() :
+            
+            time.sleep(1/1000)
+            mujoco.mj_step(model, data)
+            viewer.sync()
