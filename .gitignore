@@ -8,3 +8,10 @@ recordings/*
 **/__pycache__/*
 **/*.egg-info/
 wandb/*
+LAFAN1_Retargeting_Dataset/*
+lafan_h1_2/*
+lafan_Q1/*
+artifacts/*
+deploy_mujoco/recordings/* 
+deploy_mujoco/artifacts/*
+deploy_mujoco/deploy_policy/*
