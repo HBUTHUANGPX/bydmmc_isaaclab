@@ -52,7 +52,7 @@ class OnPolicyRunner:
             raise ValueError(
                 f"Training type not found for algorithm {self.alg_cfg['class_name']}."
             )
-
+        self.class_name = self.alg_cfg["class_name"]
         # resolve dimensions of observations
         obs, extras = self.env.get_observations()
         num_obs = obs.shape[1]
@@ -273,7 +273,10 @@ class OnPolicyRunner:
                         privileged_obs = obs
 
                     # process the step
-                    self.alg.process_env_step(rewards, dones, infos, privileged_obs)
+                    if self.class_name == "PPO_Adapter":                    
+                        self.alg.process_env_step(rewards, dones, infos, privileged_obs)
+                    else:
+                        self.alg.process_env_step(rewards, dones, infos)
 
                     # Extract intrinsic rewards (only for logging)
                     intrinsic_rewards = (

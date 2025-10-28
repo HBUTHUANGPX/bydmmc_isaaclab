@@ -167,7 +167,7 @@ class PPO_Adapter:
         self.transition.privileged_observations = critic_obs
         return self.transition.actions
 
-    def process_env_step(self, rewards, dones, infos, next_obs):
+    def process_env_step(self, rewards, dones, infos, next_obs,**ar):
         # Record the rewards and dones
         # Note: we clone here because later on we bootstrap the rewards based on timeouts
         self.transition.rewards = rewards.clone()
