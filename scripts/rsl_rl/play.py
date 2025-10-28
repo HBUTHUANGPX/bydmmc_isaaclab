@@ -144,14 +144,15 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     # export policy to onnx/jit
     export_model_dir = os.path.join(os.path.dirname(resume_path), "exported")
 
-    # export_motion_policy_as_onnx(
-    #     env.unwrapped,
-    #     ppo_runner.alg.policy,
-    #     normalizer=ppo_runner.obs_normalizer,
-    #     path=export_model_dir,
-    #     filename="policy.onnx",
-    # )
-    # attach_onnx_metadata(env.unwrapped, args_cli.wandb_path if args_cli.wandb_path else "none", export_model_dir)
+    export_motion_policy_as_onnx(
+        env.unwrapped,
+        ppo_runner.alg.policy,
+        normalizer=ppo_runner.obs_normalizer,
+        path=export_model_dir,
+        filename="policy.onnx",
+    )
+    print("export_model_dir:",export_model_dir)
+    attach_onnx_metadata(env.unwrapped, args_cli.wandb_path if args_cli.wandb_path else "none", export_model_dir)
     # reset environment
     obs, _ = env.get_observations()
     timestep = 0

@@ -41,6 +41,7 @@ from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
 ##
 from whole_body_tracking.robots.g1 import G1_CYLINDER_CFG
 from whole_body_tracking.robots.h1_2 import H1_2_CYLINDER_CFG
+from whole_body_tracking.robots.q1 import Q1_CYLINDER_CFG
 from whole_body_tracking.tasks.tracking.mdp import MotionLoader
 
 
@@ -59,7 +60,7 @@ class ReplayMotionsSceneCfg(InteractiveSceneCfg):
     )
 
     # articulation
-    robot: ArticulationCfg = H1_2_CYLINDER_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    robot: ArticulationCfg = Q1_CYLINDER_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
 
 
 def run_simulator(sim: sim_utils.SimulationContext, scene: InteractiveScene):
@@ -68,7 +69,7 @@ def run_simulator(sim: sim_utils.SimulationContext, scene: InteractiveScene):
     # Define simulation stepping
     sim_dt = sim.get_physics_dt()
 
-    registry_name = "2082672018-hpx/csv_to_npz/hpx_walk_h1_2_0923_03"
+    registry_name = "2082672018-hpx/csv_to_npz/Q1_251021_03_saw_120Hz"
     if ":" not in registry_name:  # Check if the registry name includes alias, if not, append ":latest"
         registry_name += ":latest"
     import pathlib
