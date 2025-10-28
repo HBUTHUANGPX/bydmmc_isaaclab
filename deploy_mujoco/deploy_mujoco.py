@@ -40,20 +40,22 @@ class cfg:
     policy_type = "onnx"  # torch or onnx
     policy_path = (
         current_path
-        # + "/deploy_mujoco/deploy_policy/2025-09-19_17-09-58_h1_2_hpx_walk_v1_30000step.onnx"
-        # + "/deploy_mujoco/deploy_policy/2025-09-18_09-22-51_h1_2_hpx_run_v1_15000step.onnx"
-        # + "/deploy_mujoco/deploy_policy/2025-09-23_11-16-07_h1_2_0923_01_v1_15000step.onnx"
-        + "/deploy_mujoco/deploy_policy/2025-09-24_10-36-23_h1_2_0923_03_v0_11000step.onnx"
+        + "/deploy_mujoco/deploy_policy/"
+        # + "2025-09-24_10-36-23_h1_2_0923_03_v0_11000step.onnx"
+        + "2025-10-24_19-22-31_251021_03_walk_120Hz_2_52500"
+        + ".onnx"
     )
     asset_path = "/deploy_mujoco/assets/unitree_h1_2"
+    # mjcf_path = current_path + asset_path + "/h1_2_wo_hand.xml"
     mjcf_path = current_path + asset_path + "/h1_2.xml"
     urdf_path = current_path + asset_path + "/h1_2.urdf"
     motion_file = (
         current_path
-        + "/deploy_mujoco/deploy_policy/artifacts/hpx_walk_h1_2_0923_03:v0/motion.npz"
-        # + "/deploy_mujoco/deploy_policy/artifacts/hpx_walk_h1_2_0923_01:v1/motion.npz"
-        # + "/deploy_mujoco/deploy_policy/artifacts/hpx_run_h1_2:v1/motion.npz"
-        # + "/deploy_mujoco/deploy_policy/artifacts/hpx_walk_h1_2:v3/motion.npz"
+        + "/deploy_mujoco/artifacts/"
+        + "251021_03_saw_120Hz_2:v0"
+        # + "251021_04_boxing_120Hz:v0"
+        # + "251014_single_action_forward_walk:v0"
+        + "/motion.npz"
     )
     sim_data_filename = current_path + "/deploy_mujoco/deploy_policy/data.pkl"
     only_leg_flag = False  # True, False
@@ -62,39 +64,41 @@ class cfg:
     ###############################
     # stiffness and damping param #
     ###############################
-    # leg_P_gains = [60, 220, 220, 320, 40, 40] * 2
-    leg_P_gains = [200, 200, 200, 300, 50, 50] * 2
-    leg_D_gains = [1.5, 4, 4, 4, 2.0, 2.0] * 2
+    leg_P_gains = [200, 300, 300, 300, 70, 70] * 2
+    leg_D_gains = [1.5, 3, 3, 3, 2.0, 2.0] * 2
 
     torso_P_gains = [200.0]
-    torso_D_gains = [3.5]
+    torso_D_gains = [1.5]
 
-    arm_P_gains = [240.0, 240.0, 240.0, 160.0, 160.0, 160.0, 160.0] * (2)
-    arm_D_gains = [4.0, 4.0, 4.0, 3.0, 3.0, 3.0, 3.0] * (2)
+    arm_P_gains = [70.0, 70.0, 70.0, 70.0, 20.0, 20.0, 20.0] * (2)
+    arm_D_gains = [1.5, 1.5, 2.0, 1.5, 0.8, 0.8, 0.8] * (2)
+    # leg_P_gains = [60, 220, 220, 320, 40, 40] * 2
+
+    ########################
+    # joint maximum torque #
+    ########################
+    leg_tq_max = [200.0, 300.0, 300.0, 300.0, 75.0, 75.0] * (2)
+    torso_tq_max = [200.0]
+    arm_tq_max = [120.0, 120.0, 75.0, 120.0, 25.0, 25.0, 25.0] * (2)
 
     #####################
     # joint default pos #
     #####################
-    leg_default_pos = [0.0, -0.07, 0.0, 0.17, -0.1, 0.0] * (2)
-    # leg_default_pos = [0.0] * (12)
+    leg_default_pos = [0.0, -0.18, 0.0, 0.38, -0.2, 0.0]* (2)
     torso_default_pos = [0.0]
-    arm_default_pos = [0.0, 0.1618, 0.0, 1.54, 0.0, 0.0, 0.0] + [
+    arm_default_pos = [0.0, 0.2, 0.0, 1.54, 0.0, 0.0, 0.0] + [
         0.0,
-        -0.1618,
+        -0.2,
         0.0,
         1.54,
         0.0,
         0.0,
         0.0,
     ]
+    # leg_default_pos = [0.0] * (12)
+    # torso_default_pos = [0.0]
     # arm_default_pos = [0.0] * (14)
 
-    ########################
-    # joint maximum torque #
-    ########################
-    leg_tq_max = [200.0, 200.0, 200.0, 300.0, 50.0, 50.0] * (2)
-    torso_tq_max = [200.0]
-    arm_tq_max = [40, 40.0, 18.0, 18.0, 19.0, 19.0, 19.0] * (2)
 
     ################
     # action param #
@@ -453,6 +457,9 @@ class simulator:
             "xpos": [],
             "xquat": [],
             "cvel": [],
+            "P_gain": [self.P_gains],
+            "D_gain": [self.D_gains],
+            "target_pos":[],
         }
 
         while self.viewer.is_running():
@@ -494,6 +501,9 @@ class simulator:
             )
             log["cvel"].append(
                 np.copy(self.d.cvel[self.mujoco_body_names_wo_hand_indices, :])
+            )
+            log["target_pos"].append(
+                np.copy(self.target_dof_pos)
             )
             if self.time_step >= self.motion.time_step_total:
                 break
@@ -767,11 +777,11 @@ class simulator:
 
     def set_camera(self):
         self.viewer.cam.distance = 4
-        self.viewer.cam.azimuth = 180#135
+        self.viewer.cam.azimuth = 180  # 135
         self.viewer.cam.elevation = 0.0
         self.viewer.cam.fixedcamid = -1
         self.viewer.cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
-        self.viewer.cam.trackbodyid = 0
+        self.viewer.cam.trackbodyid = 1
 
     def _init_robot_conf(self):
         self.default_pos = np.array(
@@ -863,8 +873,7 @@ class simulator:
         self.action_scale = cfg.action_scale
         self.action_num = cfg.action_num
         self.obs = np.zeros(cfg.num_single_obs * cfg.frame_stack, dtype=np.float32)
-        self.time_step = np.ones(1, dtype=np.float32) * 10
-
+        self.time_step = np.ones(1, dtype=np.float32) * 1
         self.single_obs = np.zeros(cfg.num_single_obs, dtype=np.float32)
 
     def load_onnx_model(self, onnx_path, device="cpu"):

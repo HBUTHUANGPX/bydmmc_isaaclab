@@ -179,7 +179,7 @@
                   <joint name="right_ankle_roll_joint" pos="0 0 0" axis="1 0 0" range="-0.261799 0.261799" actuatorfrcrange="-40 40"/>
                   <geom type="mesh" contype="0" conaffinity="0" group="0" density="0" rgba="0.1 0.1 0.1 1" mesh="right_ankle_roll_link"/>
                   <geom type="mesh" name='right_foot' rgba="0.1 0.1 0.1 1" mesh="right_ankle_roll_link"/>
-                  <geom size="0.005" name="right_foot_geom_0"pos="-0.08 0.038 -0.041" rgba="0.4 1 1 1"/>
+                  <geom size="0.005" name="right_foot_geom_0" pos="-0.08 0.038 -0.041" rgba="0.4 1 1 1"/>
                   <geom size="0.005" name="right_foot_geom_1" pos="-0.08 -0.038 -0.041" rgba="0.4 1 1 1"/>
                   <geom size="0.005" name="right_foot_geom_2" pos="-0.06 0.038 -0.041" rgba="0.4 1 1 1"/>
                   <geom size="0.005" name="right_foot_geom_3" pos="-0.06 -0.038 -0.041" rgba="0.4 1 1 1"/>
