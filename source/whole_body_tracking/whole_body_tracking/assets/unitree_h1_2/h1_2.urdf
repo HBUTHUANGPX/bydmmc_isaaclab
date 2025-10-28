@@ -594,7 +594,7 @@
   <joint name="left_shoulder_roll_joint" type="revolute">
     <origin xyz="0.0342 0.061999 -0.0060011" rpy="-0.1 0 0"/>
     <!-- <origin xyz="0.0342 0.061999 -0.0060011" rpy="-0.2618 0 0"/> -->
-    <parent link="left_shoulder_pitch_link"/>
+    <parent link="left_shoulder_pitc h_link"/>
     <child link="left_shoulder_roll_link"/>
     <axis xyz="1 0 0"/>
     <limit lower="-0.38" upper="3.4" effort="40" velocity="9"/>
