@@ -28,7 +28,7 @@ import whole_body_tracking.tasks.tracking.mdp as mdp
 ##
 
 VELOCITY_RANGE = {
-    "x": (-0.5, 0.5),
+    "x": (-0.8, 0.8),
     "y": (-0.5, 0.5),
     "z": (-0.2, 0.2),
     "roll": (-0.52, 0.52),
@@ -69,7 +69,11 @@ class MySceneCfg(InteractiveSceneCfg):
         spawn=sim_utils.DomeLightCfg(color=(0.13, 0.13, 0.13), intensity=1000.0),
     )
     contact_forces = ContactSensorCfg(
-        prim_path="{ENV_REGEX_NS}/Robot/.*", history_length=3, track_air_time=True, force_threshold=10.0, debug_vis=True
+        prim_path="{ENV_REGEX_NS}/Robot/.*",
+        history_length=3,
+        track_air_time=True,
+        force_threshold=10.0,
+        debug_vis=True,
     )
 
 
@@ -87,15 +91,24 @@ class CommandsCfg:
         resampling_time_range=(1.0e9, 1.0e9),
         debug_vis=True,
         pose_range={
-            "x": (-0.05, 0.05),
-            "y": (-0.05, 0.05),
-            "z": (-0.01, 0.01),
-            "roll": (-0.1, 0.1),
-            "pitch": (-0.1, 0.1),
-            "yaw": (-0.2, 0.2),
+            "x": (-0.0, 0.0),
+            "y": (-0.0, 0.0),
+            "z": (-0.0, 0.0),
+            "roll": (-0., 0.),
+            "pitch": (-0., 0.),
+            "yaw": (-0., 0.),
+            # "x": (-0.05, 0.05),
+            # "z": (-0.01, 0.01),
+            # "y": (-0.05, 0.05),
+            # "roll": (-0.1, 0.1),
+            # "pitch": (-0.1, 0.1),
+            # "yaw": (-0.2, 0.2),
         },
         velocity_range=VELOCITY_RANGE,
-        joint_position_range=(-0.1, 0.1),
+        joint_position_range=(-0., 0.),
+        joint_velocity_range=(-0., 0.),
+        # joint_position_range=(-0.1, 0.1),
+        # joint_velocity_range=(-0.1, 0.1),
     )
 
 
@@ -103,7 +116,9 @@ class CommandsCfg:
 class ActionsCfg:
     """Action specifications for the MDP."""
 
-    joint_pos = mdp.JointPositionActionCfg(asset_name="robot", joint_names=[".*"], use_default_offset=True)
+    joint_pos = mdp.JointPositionActionCfg(
+        asset_name="robot", joint_names=[".*"], use_default_offset=True
+    )
 
 
 @configclass
@@ -115,16 +130,24 @@ class ObservationsCfg:
         """Observations for policy group."""
 
         # observation terms (order preserved)
-        command = ObsTerm(func=mdp.generated_commands, params={"command_name": "motion"})
+        command = ObsTerm(
+            func=mdp.generated_commands, params={"command_name": "motion"}
+        )
         # motion_ref_pos_b = ObsTerm(
         #     func=mdp.motion_ref_pos_b, params={"command_name": "motion"}, noise=Unoise(n_min=-0.25, n_max=0.25)
         # )
         motion_ref_ori_b = ObsTerm(
-            func=mdp.motion_ref_ori_b, params={"command_name": "motion"}, noise=Unoise(n_min=-0.05, n_max=0.05)
+            func=mdp.motion_ref_ori_b,
+            params={"command_name": "motion"},
+            noise=Unoise(n_min=-0.05, n_max=0.05),
         )
         # base_lin_vel = ObsTerm(func=mdp.base_lin_vel, noise=Unoise(n_min=-0.5, n_max=0.5))
-        base_ang_vel = ObsTerm(func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2))
-        joint_pos = ObsTerm(func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.01, n_max=0.01))
+        base_ang_vel = ObsTerm(
+            func=mdp.base_ang_vel, noise=Unoise(n_min=-0.2, n_max=0.2)
+        )
+        joint_pos = ObsTerm(
+            func=mdp.joint_pos_rel, noise=Unoise(n_min=-0.01, n_max=0.01)
+        )
         joint_vel = ObsTerm(func=mdp.joint_vel_rel, noise=Unoise(n_min=-0.5, n_max=0.5))
         actions = ObsTerm(func=mdp.last_action)
 
@@ -134,9 +157,15 @@ class ObservationsCfg:
 
     @configclass
     class PrivilegedCfg(ObsGroup):
-        command = ObsTerm(func=mdp.generated_commands, params={"command_name": "motion"})
-        motion_ref_pos_b = ObsTerm(func=mdp.motion_ref_pos_b, params={"command_name": "motion"})
-        motion_ref_ori_b = ObsTerm(func=mdp.motion_ref_ori_b, params={"command_name": "motion"})
+        command = ObsTerm(
+            func=mdp.generated_commands, params={"command_name": "motion"}
+        )
+        motion_ref_pos_b = ObsTerm(
+            func=mdp.motion_ref_pos_b, params={"command_name": "motion"}
+        )
+        motion_ref_ori_b = ObsTerm(
+            func=mdp.motion_ref_ori_b, params={"command_name": "motion"}
+        )
         body_pos = ObsTerm(func=mdp.robot_body_pos_b, params={"command_name": "motion"})
         body_ori = ObsTerm(func=mdp.robot_body_ori_b, params={"command_name": "motion"})
         base_lin_vel = ObsTerm(func=mdp.base_lin_vel)
@@ -194,6 +223,14 @@ class EventCfg:
         params={"velocity_range": VELOCITY_RANGE},
     )
 
+    # reset robot
+    reset_robot = EventTerm(
+        func=mdp.reset_robot_state_by_motioncommand,
+        mode = "reset",
+        params={
+            "command_name":"motion",
+        }
+    )
 
 @configclass
 class RewardsCfg:
@@ -261,7 +298,11 @@ class TerminationsCfg:
     )
     ref_ori = DoneTerm(
         func=mdp.bad_ref_ori,
-        params={"asset_cfg": SceneEntityCfg("robot"), "command_name": "motion", "threshold": 0.8},
+        params={
+            "asset_cfg": SceneEntityCfg("robot"),
+            "command_name": "motion",
+            "threshold": 0.8,
+        },
     )
     ee_body_pos = DoneTerm(
         func=mdp.bad_motion_body_pos_z_only,
