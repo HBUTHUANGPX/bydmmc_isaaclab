@@ -15,3 +15,6 @@ artifacts/*
 deploy_mujoco/recordings/* 
 deploy_mujoco/artifacts/*
 deploy_mujoco/deploy_policy/*
+.vscode/*
+MUJOCO_LOG.TXT
+my_variable.pkl

@@ -1,26 +1,3 @@
-{
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Python Debugger: Current File with Arguments",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "/home/hpx/HPX_LOCO_2/whole_body_tracking/scripts/rsl_rl/train.py",
-            "console": "integratedTerminal",
-            "args": [
-                "--task","Tracking-Flat-H1_2-v0",
-                // "--task","Adapter-Flat-H1_2-v0",
-                "--registry_name","2082672018-hpx/csv_to_npz/251021_04_boxing_120Hz",
-                "--headless","--logger","wandb",
-                "--log_project_name","bydmmc",
-                "--run_name","251021_04_boxing_120Hz_test",
-            ]
-        }
-    ]
-}
 // {
 //     // Use IntelliSense to learn about possible attributes.
 //     // Hover to view descriptions of existing attributes.
@@ -31,14 +8,37 @@
 //             "name": "Python Debugger: Current File with Arguments",
 //             "type": "debugpy",
 //             "request": "launch",
-//             "program": "/home/hpx/HPX_LOCO_2/whole_body_tracking/scripts/rsl_rl/play.py",
+//             "program": "/home/hpx/HPX_LOCO_2/whole_body_tracking/scripts/rsl_rl/train.py",
 //             "console": "integratedTerminal",
 //             "args": [
-//                 "--task","Adapter-Flat-H1_2-v0",
-//                 "--num_envs","2",
-//                 "--wandb_path","2082672018-hpx/bydmmc/d5nod7ja",
-//                 "--motion_file","/home/hpx/HPX_LOCO_2/whole_body_tracking/artifacts/hpx_walk_h1_2_0923_03:v0/motion.npz"
+//                 "--task","Tracking-Flat-H1_2-v0",
+//                 // "--task","Adapter-Flat-H1_2-v0",
+//                 "--registry_name","2082672018-hpx/csv_to_npz/251021_04_boxing_120Hz",
+//                 "--headless","--logger","wandb",
+//                 "--log_project_name","bydmmc",
+//                 "--run_name","251021_04_boxing_120Hz_test",
 //             ]
 //         }
 //     ]
 // }
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/hpx/HPX_LOCO_2/whole_body_tracking/scripts/rsl_rl/play.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--task","Tracking-Flat-Q1-v0",
+                "--num_envs","2",
+                "--wandb_path","2082672018-hpx/bydmmc/rkhq94nk",
+                "--motion_file","/home/hpx/HPX_LOCO_2/whole_body_tracking/artifacts/Q1_251021_03_saw_120Hz:v0/motion.npz"
+            ]
+        }
+    ]
+}
