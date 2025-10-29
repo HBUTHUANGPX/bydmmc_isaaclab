@@ -46,13 +46,13 @@ Q1_CYLINDER_CFG = ArticulationCfg(
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 0.992),
         joint_pos={
-            ".*_hip_pitch_joint": -0.18,
-            ".*_knee_joint": 0.38,
-            ".*_ankle_pitch_joint": -0.2,
+            ".*_hip_pitch_joint": 0,
+            ".*_knee_joint": 0,
+            ".*_ankle_pitch_joint": 0,
             ".*_elbow_joint": 0.0,
-            "L_shoulder_roll_joint": 0.2,
+            "L_shoulder_roll_joint": 0,
             "L_shoulder_pitch_joint": 0.0,
-            "R_shoulder_roll_joint": -0.2,
+            "R_shoulder_roll_joint": 0,
             "R_shoulder_pitch_joint": 0.0,
         },
         joint_vel={".*": 0.0},
@@ -139,7 +139,7 @@ Q1_CYLINDER_CFG = ArticulationCfg(
             stiffness=8,
             damping=1.0,
             friction=0.01,
-            effort_limit_sim= 8.3,
+            effort_limit_sim= 3.3,
         ),
 
         "HT_DMS_6015_2":HTActuatorCfg_DMS_6015_2(

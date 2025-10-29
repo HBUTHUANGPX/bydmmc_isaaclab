@@ -1,6 +1,12 @@
 <mujoco model="Q1P01_urdf">
   <compiler angle="radian" meshdir="../meshes/"/>
-
+  <default>
+    <motor ctrllimited="true"/>
+    <joint damping="0.001" armature="0.01" frictionloss="0.1"/>
+    <default class="collision">
+      <geom group="0" rgba="0.7 0.7 0.7 1"/>
+    </default>
+  </default>
   <asset>
     <mesh name="torso_link" file="torso_link.STL"/>
     <mesh name="L_shoulder_pitch_link" file="L_shoulder_pitch_link.STL"/>
@@ -40,6 +46,7 @@
       <joint name="floating_base_joint" type="free" limited="false" actuatorfrclimited="false"/>
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="torso_link"/>
       <geom size="0.08 0.08 0.2" pos="-0.03 0 0.25" type="box" rgba="0.79216 0.81961 0.93333 1"/>
+      <site name="imu" size="0.01" pos="0 0.03 0.2"/>
       <body name="L_shoulder_pitch_link" pos="0 0.21252 0.3773" quat="0.991445 0.130526 0 0">
         <inertial pos="-0.003348 -0.010925 -1.7e-06" quat="0.706924 0.70729 -0.000180578 -0.000180485" mass="1.52" diaginertia="0.002528 0.0023225 0.0015488"/>
         <joint name="L_shoulder_pitch_joint" pos="0 0 0" axis="0 1 0" range="-1.57 1.57" actuatorfrcrange="-20 20"/>
@@ -261,6 +268,10 @@
 
   </actuator>
 
+  <sensor>
+    <gyro name="imu-angular-velocity" site="imu" noise="5e-4" cutoff="34.9"/>
+    <accelerometer name="imu-linear-acceleration" site="imu" noise="1e-2" cutoff="157"/>
+  </sensor>
 <!-- setup scene -->
   <statistic center="1.0 0.7 1.0" extent="0.8" />
   <visual>
